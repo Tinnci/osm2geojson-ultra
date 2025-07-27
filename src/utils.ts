@@ -1,11 +1,11 @@
 export function purgeProps(
   obj: { [k: string]: any },
-  blacklist: string[],
+  exclude: string[],
 ): { [k: string]: any } {
   if (obj) {
     const rs = Object.assign({}, obj);
-    if (blacklist) {
-      for (const prop of blacklist) {
+    if (exclude) {
+      for (const prop of exclude) {
         delete rs[prop];
       }
     }
