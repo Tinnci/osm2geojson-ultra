@@ -34,6 +34,9 @@
   "power": {
     "include": ["plant", "substation", "generator", "transformer"]
   },
+  "piste:type": {
+    "include": ["downhill"]
+  },
   "place": {},
   "shop": {},
   "aeroway": {
