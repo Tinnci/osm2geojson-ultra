@@ -63,6 +63,11 @@ export class Relation extends OsmObject {
         if (member.geometry) {
           const way = new Way(member.ref, this.refElems);
           way.setLatLngArray(member.geometry);
+          for (const [k, v] of Object.entries(member)) {
+            if (["id", "type"].indexOf(k) < 0) {
+              way.addMeta(k, v);
+            }
+          }
           way.refCount++;
           this.ways.push(way);
           this.roles.push(member.role);
@@ -70,6 +75,11 @@ export class Relation extends OsmObject {
           const way = new Way(member.ref, this.refElems);
           for (const nid of member.nodes) {
             way.addNodeRef(nid);
+          }
+          for (const [k, v] of Object.entries(member)) {
+            if (["id", "type"].indexOf(k) < 0) {
+              way.addMeta(k, v);
+            }
           }
           way.refCount++;
           this.ways.push(way);
@@ -81,6 +91,11 @@ export class Relation extends OsmObject {
               const way = this.refElems.get(`way/${nid}`) as Way;
               if (way) {
                 way.refCount++;
+                for (const [k, v] of Object.entries(member)) {
+                  if (["id", "type"].indexOf(k) < 0) {
+                    way.addMeta(k, v);
+                  }
+                }
                 return way;
               }
             },
@@ -187,7 +202,7 @@ export class Relation extends OsmObject {
 
   public toFeatureArray(): Array<Feature<any, any>> {
     const polygonFeatures: Array<Feature<Polygon | MultiPolygon, any>> = [];
-    const stringFeatures: Array<Feature<LineString | MultiLineString, any>> =
+    let stringFeatures: Array<Feature<LineString | MultiLineString, any>> =
       [];
     let pointFeatures: Array<Feature<Point | MultiPoint, any>> = [];
 
@@ -235,7 +250,7 @@ export class Relation extends OsmObject {
         feature.geometry = geometry;
         polygonFeatures.push(feature);
       }
-    } else {
+    } else if (this.tags.type === "route") {
       const wayCollection = new WayCollection();
       for (let way of this.ways) {
         wayCollection.addWay(way as Way);
@@ -245,6 +260,15 @@ export class Relation extends OsmObject {
         let feature = Object.assign({}, templateFeature);
         feature.geometry = geometry;
         stringFeatures.push(feature);
+      }
+    } else {
+      for (let way of this.ways) {
+        const features = way.toFeatureArray();
+        for (const {geometry} of features) {
+          const feature = Object.assign({}, templateFeature);
+          feature.geometry = geometry;
+          stringFeatures.push(feature);
+        }
       }
     }
 

@@ -22,7 +22,8 @@
             "id": 5,
             "type": "relation",
             "tags": {
-                "name": "Relation 1"
+                "name": "Relation 1",
+                "type": "route"
             },
             "members": [
                 {

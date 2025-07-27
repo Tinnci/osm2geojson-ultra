@@ -7,7 +7,8 @@
       "properties": {
         "@id": 5,
         "@type": "relation",
-        "name": "Relation 1"
+        "name": "Relation 1",
+        "type": "route"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -35,7 +36,8 @@
       "properties": {
         "@id": 6,
         "@type": "relation",
-        "name": "Relation 2"
+        "name": "Relation 2",
+        "type": "route"
       },
       "geometry": {
         "type": "MultiLineString",
