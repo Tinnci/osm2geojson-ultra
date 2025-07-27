@@ -1,6 +1,9 @@
 {
-  "_from": "xml2geojson-ultra",
+  "name": "osm2geojson-ultra",
+  "license": "MIT",
+  "version": "3.0.2",
   "author": "dschep",
+  "description": "a faster & more complete OSM & Overpass (either in xml or in json formats) to geojson convertor - 4x faster than xmldom + osmtogeojson in most situations - implemented in TypeScript with txml for XML parsing",
   "bin": {
     "osm2geojson-ultra": "osm2geojson-ultra"
   },
@@ -10,7 +13,6 @@
   },
   "bundleDependencies": [],
   "deprecated": false,
-  "description": "a faster & more complete OSM & Overpass (either in xml or in json formats) to geojson convertor - 4x faster than xmldom + osmtogeojson in most situations - implemented in TypeScript with txml for XML parsing",
   "homepage": "https://github.com/dschep/osm2geojson-ultra#readme",
   "keywords": [
     "openstreetmap",
@@ -27,10 +29,8 @@
     "polygon",
     "multipolygon"
   ],
-  "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "name": "osm2geojson-ultra",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dschep/osm2geojson-ultra.git"
@@ -43,7 +43,6 @@
   "optionalDependencies": {
     "@types/geojson": "^7946.0.16"
   },
-  "version": "3.0.1",
   "directories": {
     "src": "src",
     "test": "test"

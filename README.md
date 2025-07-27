@@ -24,6 +24,7 @@ This project was forked from [osm2geojson-lite](https://github.com/tibetty/osm2g
 * Properties have a different structure (`id`, `type`, and other non-tag properties are prefixed with `@`)
 * Only distributed as an ES Module
 * All options replaced by an `elementId` option
+* Improved polygon detection for closed ways
 
 Usage
 -----

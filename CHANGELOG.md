@@ -1,5 +1,7 @@
 Changelog:
 -----
+* 2025-07: improved polygon detection
+* 2025-07: replaced all opitons with `elemntID`
 * 2025-07: Forked to `osm2geojson-ultra`, adding `txml` dependency, adding support for derived
   objects and center geometries and alterting result strucutre
 * 2025-05: Support way order in relataion, improve typescript typeings, added CI for vitest tests
