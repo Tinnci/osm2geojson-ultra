@@ -115,16 +115,19 @@ export class Way extends OsmObject {
     for (const [key, o] of Object.entries(
       polygonTags as Record<
         string,
-        { whitelist?: string[]; blacklist?: string[] }
+        { include?: string[]; exclude?: string[]; ignore?: string[] }
       >,
     )) {
       const v = this.tags[key];
       if (v && o) {
+        if (o.ignore?.includes(v)) {
+          continue;
+        }
         isPolygon = true;
-        if (o.whitelist) {
-          isPolygon = o.whitelist.includes(v);
-        } else if (o.blacklist) {
-          isPolygon = !o.blacklist.includes(v);
+        if (o.include) {
+          isPolygon = o.include.includes(v);
+        } else if (o.exclude) {
+          isPolygon = !o.exclude.includes(v);
         }
       }
     }
