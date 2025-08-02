@@ -115,26 +115,26 @@ export default function analyzeFeaturesFromXml(
       // handle nodes/ways/relations
       switch (elNode.tagName) {
         case "node":
-          const nd = new Node(elNode.attributes.id, refElements);
-          nd.addMetas(
+          const node = new Node(elNode.attributes.id, refElements);
+          setTagsFromXML(elNode, node);
+          node.addMetas(
             purgeProps(elNode.attributes as { [k: string]: string }, [
               "id",
               "lon",
               "lat",
             ]),
           );
-          setTagsFromXML(elNode, nd);
-          nd.setLatLng(elNode.attributes as LatLon);
+          node.setLatLng(elNode.attributes as LatLon);
           break;
         case "way":
           const way = new Way(elNode.attributes.id, refElements);
+          setTagsFromXML(elNode, way);
           way.addMetas(
             purgeProps(elNode.attributes as { [k: string]: string }, [
               "id",
               "type",
             ]),
           );
-          setTagsFromXML(elNode, way);
           for (const elChild of elNode.children) {
             switch (elChild.tagName) {
               case "center":
