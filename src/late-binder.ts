@@ -26,6 +26,6 @@ export class LateBinder<T> {
     if (v) {
       args.push(v);
     }
-    Array.prototype.splice.apply(this.container, args);
+    this.container.splice(...args);
   }
 }

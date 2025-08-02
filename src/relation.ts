@@ -22,10 +22,11 @@ export class Relation extends OsmObject {
   private bounds: number[] | undefined = undefined;
   private center: null | LatLon = null;
   public ways: (LateBinder<Way> | Way)[] = [];
-  public roles: string[] = [];
+  private roles: Map<string, string> | undefined;
 
   constructor(id: string, refElems: RefElements) {
     super("relation", id, refElems);
+    this.roles = new Map() as Map<string, string>;
   }
 
   public setBounds(bounds: any[]) {
@@ -37,6 +38,9 @@ export class Relation extends OsmObject {
   }
 
   public addMember(member: { [k: string]: any }) {
+    if (member.role) {
+      this.roles.set(`${member.type}/${member.ref}`, member.role);
+    }
     switch (member.type) {
       // super relation, need to do combination
       case "relation":
@@ -57,15 +61,11 @@ export class Relation extends OsmObject {
         break;
 
       case "way":
-        if (!member.role) {
-          member.role = "";
-        }
         if (member.geometry) {
           const way = new Way(member.ref, this.refElems);
           way.setLatLngArray(member.geometry);
           way.refCount++;
           this.ways.push(way);
-          this.roles.push(member.role);
         } else if (member.nodes) {
           const way = new Way(member.ref, this.refElems);
           for (const nid of member.nodes) {
@@ -73,7 +73,6 @@ export class Relation extends OsmObject {
           }
           way.refCount++;
           this.ways.push(way);
-          this.roles.push(member.role);
         } else {
           let binder = new LateBinder(
             this.ways,
@@ -88,7 +87,6 @@ export class Relation extends OsmObject {
             [member.ref],
           );
           this.ways.push(binder);
-          this.roles.push(member.role);
           this.refElems.addBinder(binder);
         }
         break;
@@ -192,14 +190,7 @@ export class Relation extends OsmObject {
     let pointFeatures: Array<Feature<Point | MultiPoint, any>> = [];
 
     for (const relation of this.relations) {
-      if (!relation) {
-        continue;
-      }
-      for (let i = 0; i < (relation as Relation).ways.length; i++) {
-        const way = (relation as Relation).ways[i];
-        this.ways.push(way);
-        this.roles.push((relation as Relation).roles[i]);
-      }
+      // TODO
     }
 
     let templateFeature: Feature<any, any> = {
@@ -214,12 +205,12 @@ export class Relation extends OsmObject {
       delete templateFeature.bbox;
     }
 
-    if (this.roles.some((r) => r === "outer")) {
+    if (Array.from(this.roles.values()).some((r) => r === "outer")) {
       const outerWayCollection = new WayCollection();
       const innerWayCollection = new WayCollection();
       for (let i = 0; i < this.ways.length; i++) {
         const way = this.ways[i];
-        const role = this.roles[i];
+        const role = this.roles.get(way.getCompositeId());
         if (role === "outer") {
           outerWayCollection.addWay(way as Way);
         } else if (role === "inner") {
