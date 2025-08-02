@@ -59111,8 +59111,7 @@
         "@id": "265018692",
         "@type": "node",
         "@role": "admin_centre",
-        "@ref": "265018692",
-        "@tags": {}
+        "@ref": "265018692"
       },
       "geometry": {
         "type": "Point",
@@ -59129,8 +59128,7 @@
         "@id": "4351358847",
         "@type": "node",
         "@role": "label",
-        "@ref": "4351358847",
-        "@tags": {}
+        "@ref": "4351358847"
       },
       "geometry": {
         "type": "Point",

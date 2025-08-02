@@ -25,12 +25,13 @@ export default function analyzeFeaturesFromXml(
   for (const rootNode of parsed) {
     if (rootNode.tagName !== "osm") continue;
     for (const elNode of rootNode.children) {
+      // Check children for evidence this is a derived element and process if so
       if (
         elNode.children.find((c: any) =>
           ["point", "vertex", "linestring", "group"].includes(c.tagName),
         )
       ) {
-        // TODO: other derived output geoms
+        // TODO: other derived output geoms?
         const obj = new Output(
           elNode.tagName as string,
           elNode.attributes.id as string,
@@ -111,6 +112,7 @@ export default function analyzeFeaturesFromXml(
         }
         continue;
       }
+      // handle nodes/ways/relations
       switch (elNode.tagName) {
         case "node":
           const nd = new Node(elNode.attributes.id, refElements);
@@ -134,14 +136,17 @@ export default function analyzeFeaturesFromXml(
           );
           setTagsFromXML(elNode, way);
           for (const elChild of elNode.children) {
-            if (elChild.tagName === "center") {
-              way.setCenter(elChild.attributes as LatLon);
-            } else if (elChild.tagName === "nd") {
-              if (elChild.attributes.lon && elChild.attributes.lat) {
-                way.addLatLng(elChild.attributes as LatLon);
-              } else {
-                way.addNodeRef(elChild.attributes.ref);
-              }
+            switch (elChild.tagName) {
+              case "center":
+                way.setCenter(elChild.attributes as LatLon);
+                break;
+              case "nd":
+                if (elChild.attributes.lon && elChild.attributes.lat) {
+                  way.addLatLng(elChild.attributes as LatLon);
+                } else {
+                  way.addNodeRef(elChild.attributes.ref);
+                }
+                break;
             }
           }
           break;
@@ -149,55 +154,49 @@ export default function analyzeFeaturesFromXml(
           const rel = new Relation(elNode.attributes.id, refElements);
           setTagsFromXML(elNode, rel);
           for (const elChild of elNode.children) {
-            if (elChild.tagName === "center") {
-              rel.setCenter(elChild.attributes as LatLon);
-            } else if (elChild.tagName === "member") {
-              const member: { [k: string]: any } = {
-                type: elChild.attributes.type,
-                role: elChild.attributes.role || "",
-                ref: elChild.attributes.ref,
-              };
-              if (
-                elChild.attributes.type === "node" &&
-                elChild.attributes.lon &&
-                elChild.attributes.lat
-              ) {
-                member.lon = elChild.attributes.lon;
-                member.lat = elChild.attributes.lat;
-                member.tags = {};
-                for (const [k, v] of Object.entries(elChild.attributes)) {
-                  if (
-                    !k.startsWith("$") &&
-                    ["type", "lat", "lon"].indexOf(k) < 0
-                  ) {
-                    member[k] = v;
+            switch (elChild.tagName) {
+              case "center":
+                rel.setCenter(elChild.attributes as LatLon);
+                break;
+              case "member":
+                const member: { [k: string]: any } = {
+                  type: elChild.attributes.type,
+                  role: elChild.attributes.role || "",
+                  ref: elChild.attributes.ref,
+                };
+                if (
+                  elChild.attributes.type === "node" &&
+                  elChild.attributes.lon &&
+                  elChild.attributes.lat
+                ) {
+                  member.lon = elChild.attributes.lon;
+                  member.lat = elChild.attributes.lat;
+                } else {
+                  const geometry: any[] = [];
+                  const nodes: any[] = [];
+                  for (const memChild of elChild.children) {
+                    if (memChild.attributes.lon && memChild.attributes.lat) {
+                      geometry.push(memChild.attributes as LatLon);
+                    } else if (memChild.attributes.ref) {
+                      nodes.push(memChild.attributes.ref);
+                    }
+                  }
+                  if (geometry.length > 0) {
+                    member.geometry = geometry;
+                  } else if (nodes.length > 0) {
+                    member.nodes = nodes;
                   }
                 }
-              } else {
-                const geometry: any[] = [];
-                const nodes: any[] = [];
-                for (const memChild of elChild.children) {
-                  if (memChild.attributes.lon && memChild.attributes.lat) {
-                    geometry.push(memChild.attributes as LatLon);
-                  } else if (memChild.attributes.ref) {
-                    nodes.push(memChild.attributes.ref);
-                  }
-                }
-                if (geometry.length > 0) {
-                  member.geometry = geometry;
-                } else if (nodes.length > 0) {
-                  member.nodes = nodes;
-                }
-              }
-              rel.addMember(member);
-            }
-            if (elChild.tagName === "bounds") {
-              rel.setBounds([
-                parseFloat(elChild.attributes.minlon),
-                parseFloat(elChild.attributes.minlat),
-                parseFloat(elChild.attributes.maxlon),
-                parseFloat(elChild.attributes.maxlat),
-              ]);
+                rel.addMember(member);
+                break;
+              case "bounds":
+                rel.setBounds([
+                  parseFloat(elChild.attributes.minlon),
+                  parseFloat(elChild.attributes.minlat),
+                  parseFloat(elChild.attributes.maxlon),
+                  parseFloat(elChild.attributes.maxlat),
+                ]);
+                break;
             }
           }
           break;

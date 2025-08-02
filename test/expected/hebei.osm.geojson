@@ -33201,8 +33201,7 @@
         "@id": "3051635970",
         "@type": "node",
         "@role": "admin_centre",
-        "@ref": "3051635970",
-        "@tags": {}
+        "@ref": "3051635970"
       },
       "geometry": {
         "type": "Point",
@@ -33219,8 +33218,7 @@
         "@id": "244080467",
         "@type": "node",
         "@role": "label",
-        "@ref": "244080467",
-        "@tags": {}
+        "@ref": "244080467"
       },
       "geometry": {
         "type": "Point",

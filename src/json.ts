@@ -11,6 +11,7 @@ export default function analyzeFeaturesFromJson(
   refElements: RefElements,
 ): void {
   for (const elem of (osm as { [k: string]: any }).elements) {
+    // Check for evidence ths is a derived element and process if so
     if (elem.geometry?.type) {
       const obj = new Output(
         elem.type as string,
@@ -31,6 +32,7 @@ export default function analyzeFeaturesFromJson(
       obj.setGeometry(elem.geometry);
       continue;
     }
+    // handle nodes/ways/relations
     switch (elem.type) {
       case "node":
         const node = new Node(elem.id as string, refElements);
@@ -102,7 +104,6 @@ export default function analyzeFeaturesFromJson(
             relation.addMember(member);
           }
         }
-      default:
         break;
     }
   }
