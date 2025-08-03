@@ -7,7 +7,8 @@
       "properties": {
         "@id": 5,
         "@type": "relation",
-        "name": "Closed route relation"
+        "name": "Closed route relation",
+        "type": "route"
       },
       "geometry": {
         "type": "MultiLineString",

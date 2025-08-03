@@ -14,6 +14,7 @@ import type {
   MultiPolygon,
   Point,
   Polygon,
+  GeometryObject,
 } from "geojson";
 
 export class Relation extends OsmObject {
@@ -22,11 +23,10 @@ export class Relation extends OsmObject {
   private bounds: number[] | undefined = undefined;
   private center: null | LatLon = null;
   public ways: (LateBinder<Way> | Way)[] = [];
-  private roles: Map<string, string> | undefined;
+  private members: Array<{ [k: string]: any}> = [];
 
   constructor(id: string, refElems: RefElements) {
     super("relation", id, refElems);
-    this.roles = new Map() as Map<string, string>;
   }
 
   public setBounds(bounds: any[]) {
@@ -38,9 +38,7 @@ export class Relation extends OsmObject {
   }
 
   public addMember(member: { [k: string]: any }) {
-    if (member.role) {
-      this.roles.set(`${member.type}/${member.ref}`, member.role);
-    }
+    this.members.push(member);
     switch (member.type) {
       // super relation, need to do combination
       case "relation":
@@ -76,8 +74,8 @@ export class Relation extends OsmObject {
         } else {
           let binder = new LateBinder(
             this.ways,
-            (nid) => {
-              const way = this.refElems.get(`way/${nid}`) as Way;
+            (wid) => {
+              const way = this.refElems.get(`way/${wid}`) as Way;
               if (way) {
                 way.refCount++;
                 return way;
@@ -183,17 +181,19 @@ export class Relation extends OsmObject {
     return null;
   }
 
-  public toFeatureArray(): Array<Feature<any, any>> {
+  public toFeature(): Feature | undefined {
+    const geometries: Array<GeometryObject> = [];
     const polygonFeatures: Array<Feature<Polygon | MultiPolygon, any>> = [];
     const stringFeatures: Array<Feature<LineString | MultiLineString, any>> =
       [];
     let pointFeatures: Array<Feature<Point | MultiPoint, any>> = [];
+    let tainted = false;
 
     for (const relation of this.relations) {
       // TODO
     }
 
-    let templateFeature: Feature<any, any> = {
+    const feature: Feature<any, any> = {
       type: "Feature",
       id: this.getCompositeId(),
       bbox: this.bounds as BBox,
@@ -202,56 +202,80 @@ export class Relation extends OsmObject {
     };
 
     if (!this.bounds) {
-      delete templateFeature.bbox;
+      delete feature.bbox;
     }
 
-    if (Array.from(this.roles.values()).some((r) => r === "outer")) {
+    if (this.members.some(({role}) => role === "outer")) {
       const outerWayCollection = new WayCollection();
       const innerWayCollection = new WayCollection();
-      for (let i = 0; i < this.ways.length; i++) {
-        const way = this.ways[i];
-        const role = this.roles.get(way.getCompositeId());
-        if (role === "outer") {
-          outerWayCollection.addWay(way as Way);
-        } else if (role === "inner") {
-          innerWayCollection.addWay(way as Way);
+      for (const { type, ref, role } of this.members) {
+        if (type === "way" && ["inner", "outer"].includes(role)) {
+          const way = this.ways.find((way) => way.getCompositeId() === `way/${ref}`);
+          if (way) {
+            if (role === "outer") {
+              outerWayCollection.addWay(way as Way);
+            } else if (role === "inner") {
+              innerWayCollection.addWay(way as Way);
+            }
+          } else {
+            tainted = true
+          }
         }
       }
-      let feature = Object.assign({}, templateFeature);
       let geometry = this.constructPolygonGeometry(
         outerWayCollection,
         innerWayCollection,
       );
       if (geometry) {
-        feature.geometry = geometry;
-        polygonFeatures.push(feature);
+        geometries.push(geometry);
       }
-    } else {
+    } else if (
+      ["multilinestring", "route", "waterway"].includes(this.tags.type)
+    ) {
       const wayCollection = new WayCollection();
-      for (let way of this.ways) {
-        wayCollection.addWay(way as Way);
+      for (const { type, ref, role } of this.members) {
+        if (type === "way") {
+          const way = this.ways.find((way) => way.getCompositeId() === `way/${ref}`);
+          if (way) {
+            wayCollection.addWay(way as Way);
+          } else {
+            tainted = true;
+          }
+        }
       }
       let geometry = this.constructStringGeometry(wayCollection);
       if (geometry) {
-        let feature = Object.assign({}, templateFeature);
-        feature.geometry = geometry;
-        stringFeatures.push(feature);
+        geometries.push(geometry);
+      }
+    } else {
+      for (let way of this.ways) {
+        const feature = way.toFeature();
+        geometries.push(feature.geometry);
       }
     }
 
     for (let node of this.nodes) {
-      pointFeatures = pointFeatures.concat((node as Node).toFeatureArray());
+      const latLng = (node as Node).getLatLng();
+      if (latLng) {
+        geometries.push({
+          type: "Point",
+          coordinates: strArrayToFloat([latLng.lon, latLng.lat]),
+        });
+      }
     }
 
     if (this.center !== null) {
-      const feature = Object.assign({}, templateFeature);
-      feature.geometry = {
+      geometries.push({
         type: "Point",
         coordinates: strArrayToFloat([this.center.lon, this.center.lat]),
-      };
-      pointFeatures.push(feature);
+      });
     }
 
-    return [...polygonFeatures, ...stringFeatures, ...pointFeatures];
+    if (geometries.length === 1) {
+      feature.geometry = geometries[0];
+    } else {
+      feature.geometry = { type: "GeometryCollection", geometries };
+    }
+    return feature;
   }
 }

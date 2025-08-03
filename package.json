@@ -37,6 +37,7 @@
   },
   "scripts": {
     "build": "tsc --skipLibCheck --declaration && cp src/polytags.json dist",
+    "type-check": "tsc --skipLibCheck --watch",
     "format": "prettier --write src",
     "test": "vitest test/e2e.test.ts --coverage"
   },

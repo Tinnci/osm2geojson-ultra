@@ -28,7 +28,8 @@
             "id": 5,
             "type": "relation",
             "tags": {
-                "name": "Closed route relation"
+                "name": "Closed route relation",
+                "type": "route"
             },
             "members": [
                 {

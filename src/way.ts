@@ -66,7 +66,7 @@ export class Way extends OsmObject {
     ]);
   }
 
-  public toFeatureArray(): Array<Feature<any, any>> {
+  public toFeature(): Feature | undefined {
     let coordsArrayString = this.toCoordsArray();
     if (coordsArrayString.length > 1) {
       const coordsArray = strArrayArrayToFloat(coordsArrayString);
@@ -90,10 +90,10 @@ export class Way extends OsmObject {
           coordinates: [coordsArray],
         };
 
-        return [feature];
+        return feature;
       }
 
-      return [feature];
+      return feature;
     } else if (this.center !== null) {
       const feature: Feature<any, any> = {
         type: "Feature",
@@ -104,10 +104,8 @@ export class Way extends OsmObject {
           coordinates: strArrayToFloat([this.center.lon, this.center.lat]),
         },
       };
-      return [feature];
+      return feature;
     }
-
-    return [];
   }
 
   get isPolygon() {

@@ -11,7 +11,7 @@ for (let file of xmlFiles) {
 	console.log(`---processing ${file}---`);
 	const stime = new Date().getTime();
 	for (let i = 0; i < rounds; i++) {
-		osm2geojson(osm, {completeFeature: true});
+		osm2geojson(osm);
 	}
 	const etime = new Date().getTime();
 	console.log(`-> ${etime - stime}ms was taken for ${rounds} rounds`);
@@ -24,7 +24,7 @@ for (let file of jsonFiles) {
 	console.log(`---processing ${file}---`);
 	const stime = new Date().getTime();
 	for (let i = 0; i < rounds; i++) {
-		osm2geojson(osm, {completeFeature: true});
+		osm2geojson(osm);
 	}
 	const etime = new Date().getTime();
 	console.log(`-> ${etime - stime}ms was taken for ${rounds} rounds`);

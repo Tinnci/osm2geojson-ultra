@@ -63,5 +63,5 @@ export abstract class OsmObject {
     };
   }
 
-  public abstract toFeatureArray(): Array<Feature<any, any>>;
+  public abstract toFeature(): Feature | undefined;
 }

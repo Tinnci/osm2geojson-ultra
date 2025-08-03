@@ -40,14 +40,12 @@ function detectFormat(
 function osm2geojson(
   osm: string | { [k: string]: any },
   opts?: IOptions,
-): FeatureCollection<GeometryObject> {
+): FeatureCollection<GeometryObject> | Feature<any, any> | undefined {
   let { elementId } = parseOptions(opts);
 
   let format = detectFormat(osm);
 
   const refElements = new RefElements();
-  let featureArray: Feature<any, any>[] = [];
-
   if (format === "json-raw") {
     osm = JSON.parse(osm as string) as { [k: string]: any };
     if ((osm as { [k: string]: any }).elements) {
@@ -65,18 +63,26 @@ function osm2geojson(
 
   refElements.bindAll();
 
+  let featureArray: Feature<any, any>[] = [];
+
   if (elementId) {
-    const features = refElements.get(elementId)?.toFeatureArray() || [];
-    featureArray = featureArray.concat(features);
+    //return refElements.get(elementId)?.toFeature();
+    const feature = refElements.get(elementId)?.toFeature();
+    if (feature) {
+      featureArray.push(feature);
+    }
   } else {
-    for (const v of refElements.values()) {
-      if (v.refCount > 0 && !v.hasTag) {
-        continue;
-      }
-      const features = v.toFeatureArray();
-      featureArray = featureArray.concat(features);
+
+  for (const v of refElements.values()) {
+    if (v.refCount > 0 && !v.hasTag) {
+      continue;
+    }
+    const feature = v.toFeature();
+    if (feature) {
+      featureArray.push(feature);
     }
   }
+}
 
   return { type: "FeatureCollection", features: featureArray };
 }

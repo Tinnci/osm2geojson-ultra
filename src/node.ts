@@ -16,21 +16,18 @@ export class Node extends OsmObject {
     this.latLng = latLng;
   }
 
-  public toFeatureArray(): Array<Feature<any, any>> {
+  public toFeature(): Feature | undefined {
     if (this.latLng) {
-      return [
-        {
-          type: "Feature",
-          id: this.getCompositeId(),
-          properties: this.getProps(),
-          geometry: {
-            type: "Point",
-            coordinates: strArrayToFloat([this.latLng.lon, this.latLng.lat]),
-          },
+      return {
+        type: "Feature",
+        id: this.getCompositeId(),
+        properties: this.getProps(),
+        geometry: {
+          type: "Point",
+          coordinates: strArrayToFloat([this.latLng.lon, this.latLng.lat]),
         },
-      ];
+      };
     }
-    return [];
   }
 
   public getLatLng(): LatLon | undefined {

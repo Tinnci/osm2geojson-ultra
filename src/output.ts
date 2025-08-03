@@ -14,17 +14,14 @@ export class Output extends OsmObject {
     this.geometry = geometry;
   }
 
-  public toFeatureArray(): Array<Feature<any, any>> {
+  public toFeature(): Feature | undefined {
     if (this.geometry) {
-      return [
-        {
-          type: "Feature",
-          id: this.getCompositeId(),
-          properties: this.getProps(),
-          geometry: this.geometry,
-        },
-      ];
+      return {
+        type: "Feature",
+        id: this.getCompositeId(),
+        properties: this.getProps(),
+        geometry: this.geometry,
+      };
     }
-    return [];
   }
 }
