@@ -21,7 +21,8 @@
     "short_name:en": "CONUS",
     "type": "boundary",
     "wikidata": "Q578170",
-    "wikipedia": "en:Contiguous United States"
+    "wikipedia": "en:Contiguous United States",
+    "@tainted": true
   },
   "geometry": {
     "type": "Point",

@@ -31,7 +31,8 @@
     "timezone": "Asia/Shanghai",
     "type": "boundary",
     "wikidata": "Q21208",
-    "wikipedia": "zh:河北省"
+    "wikipedia": "zh:河北省",
+    "@tainted": true
   },
   "geometry": {
     "type": "GeometryCollection",

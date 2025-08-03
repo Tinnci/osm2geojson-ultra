@@ -40,7 +40,8 @@
     "place": "province",
     "type": "boundary",
     "wikidata": "Q1490",
-    "wikipedia": "ja:東京都"
+    "wikipedia": "ja:東京都",
+    "@tainted": true
   },
   "geometry": {
     "type": "GeometryCollection",

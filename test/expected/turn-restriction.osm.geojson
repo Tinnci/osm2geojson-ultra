@@ -17,13 +17,6 @@
     "type": "GeometryCollection",
     "geometries": [
       {
-        "type": "Point",
-        "coordinates": [
-          -77.4833584,
-          37.5488451
-        ]
-      },
-      {
         "type": "LineString",
         "coordinates": [
           [
@@ -58,6 +51,13 @@
             -77.4833584,
             37.5488451
           ]
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          -77.4833584,
+          37.5488451
         ]
       },
       {

@@ -14,6 +14,7 @@ import type { RefElements } from "./ref-elements.js";
 export class Way extends OsmObject {
   private latLngArray: Array<LatLon | LateBinder<LatLon>>;
   private center: null | LatLon;
+  private tainted: boolean = false;
 
   constructor(id: string, refElems: RefElements) {
     super("way", id, refElems);
@@ -41,6 +42,8 @@ export class Way extends OsmObject {
         if (node) {
           node.refCount++;
           return node.getLatLng();
+        } else {
+          this.tainted = true;
         }
       },
       this,
@@ -79,6 +82,9 @@ export class Way extends OsmObject {
           coordinates: coordsArray,
         },
       };
+      if (this.tainted) {
+        feature.properties["@tainted"] = this.tainted;
+      }
 
       if (this.isPolygon && isRing(coordsArray)) {
         if (ringDirection(coordsArray) !== "counterclockwise") {
@@ -89,6 +95,9 @@ export class Way extends OsmObject {
           type: "Polygon",
           coordinates: [coordsArray],
         };
+        if (this.tainted) {
+          feature.properties["@tainted"] = this.tainted;
+        }
 
         return feature;
       }
@@ -104,6 +113,9 @@ export class Way extends OsmObject {
           coordinates: strArrayToFloat([this.center.lon, this.center.lat]),
         },
       };
+      if (this.tainted) {
+        feature.properties["@tainted"] = this.tainted;
+      }
       return feature;
     }
   }

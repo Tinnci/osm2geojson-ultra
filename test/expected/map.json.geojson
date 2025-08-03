@@ -56,7 +56,8 @@
         "@user": "tyr_asd",
         "@uid": 115612,
         "bicycle": "no",
-        "highway": "pedestrian"
+        "highway": "pedestrian",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -178,7 +179,8 @@
         "@changeset": 18679226,
         "@user": "Skombi",
         "@uid": 1380953,
-        "barrier": "wall"
+        "barrier": "wall",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -278,7 +280,8 @@
         "@changeset": 7654992,
         "@user": "tyr_asd",
         "@uid": 115612,
-        "building": "yes"
+        "building": "yes",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -305,7 +308,8 @@
         "@changeset": 14642447,
         "@user": "tyr_asd",
         "@uid": 115612,
-        "building": "yes"
+        "building": "yes",
+        "@tainted": true
       },
       "geometry": {
         "type": "Polygon",
@@ -342,7 +346,8 @@
         "@changeset": 18679226,
         "@user": "Skombi",
         "@uid": 1380953,
-        "landuse": "orchard"
+        "landuse": "orchard",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -372,7 +377,8 @@
         "amenity": "parking",
         "capacity:disabled": "2",
         "fee": "yes",
-        "type": "surface"
+        "type": "surface",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -411,7 +417,8 @@
         "highway": "pedestrian",
         "name": "Kapuzinerstraße - via Cappuccini",
         "name:de": "Kapuzinerstraße",
-        "name:it": "via Cappuccini"
+        "name:it": "via Cappuccini",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -448,7 +455,8 @@
         "@uid": 893327,
         "amenity": "school",
         "barrier": "wall",
-        "name": "Volksschule"
+        "name": "Volksschule",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -475,7 +483,8 @@
         "@changeset": 14642447,
         "@user": "tyr_asd",
         "@uid": 115612,
-        "building": "yes"
+        "building": "yes",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -592,7 +601,8 @@
         "@changeset": 14642447,
         "@user": "tyr_asd",
         "@uid": 115612,
-        "building": "terrace"
+        "building": "terrace",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -621,7 +631,8 @@
         "@uid": 115612,
         "highway": "service",
         "oneway": "yes",
-        "service": "parking_aisle"
+        "service": "parking_aisle",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -652,7 +663,8 @@
         "@changeset": 15868943,
         "@user": "tyr_asd",
         "@uid": 115612,
-        "highway": "pedestrian"
+        "highway": "pedestrian",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -683,7 +695,8 @@
         "@changeset": 15868943,
         "@user": "tyr_asd",
         "@uid": 115612,
-        "highway": "footway"
+        "highway": "footway",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -718,7 +731,8 @@
         "highway": "pedestrian",
         "name": "Hans Weber Tyrol Platz - piazza Hans Weber Tyrol",
         "name:de": "Hans Weber Tyrol Platz",
-        "name:it": "piazza Hans Weber Tyrol"
+        "name:it": "piazza Hans Weber Tyrol",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -749,7 +763,8 @@
         "highway": "pedestrian",
         "name": "Kapuzinerstraße - via Cappuccini",
         "name:de": "Kapuzinerstraße",
-        "name:it": "via Cappuccini"
+        "name:it": "via Cappuccini",
+        "@tainted": true
       },
       "geometry": {
         "type": "LineString",
@@ -779,7 +794,8 @@
         "network": "lwn",
         "ref": "540",
         "route": "hiking",
-        "type": "route"
+        "type": "route",
+        "@tainted": true
       },
       "geometry": {
         "type": "MultiLineString",
@@ -921,7 +937,8 @@
         "@uid": 1380953,
         "description": "St. Michael Eppan: residential area",
         "landuse": "residential",
-        "type": "multipolygon"
+        "type": "multipolygon",
+        "@tainted": true
       },
       "geometry": {
         "type": "GeometryCollection",

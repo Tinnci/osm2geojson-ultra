@@ -9,7 +9,8 @@
         "@type": "way",
         "name": "Quarry Pond",
         "natural": "water",
-        "water": "pond"
+        "water": "pond",
+        "@tainted": true
       },
       "geometry": {
         "type": "Point",

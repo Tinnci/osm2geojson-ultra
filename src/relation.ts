@@ -254,30 +254,32 @@ export class Relation extends OsmObject {
       }
     }
 
-    for (let node of this.nodes) {
-      const latLng = (node as Node).getLatLng();
-      if (latLng) {
-        geometries.push({
-          type: "Point",
-          coordinates: strArrayToFloat([latLng.lon, latLng.lat]),
-        });
+    for (const { type, ref, role } of this.members) {
+      const mid = `${type}/${ref}`;
+      if (membersAccountedFor.includes(mid)) continue;
+      let obj;
+      switch (type) {
+        case "node":
+          obj = this.nodes.find(
+            (node) => (node as Node).getCompositeId() === mid,
+          );
+          break;
+        case "way":
+          obj = this.ways.find((way) => (way as Way).getCompositeId() === mid);
+          break;
+        case "relation":
+          obj = this.relations.find(
+            (relation) => (relation as Relation).getCompositeId() === mid,
+          );
+          break;
       }
-    }
-
-    for (let way of this.ways) {
-      if (membersAccountedFor.includes((way as Way).getCompositeId())) continue;
-      const feature = (way as Way).toFeature();
-      if (feature?.geometry) {
-        geometries.push(feature.geometry);
-      }
-    }
-
-    for (let rel of this.relations) {
-      if (membersAccountedFor.includes((rel as Relation).getCompositeId()))
-        continue;
-      const feature = (rel as Relation).toFeature();
-      if (feature?.geometry) {
-        geometries.push(feature.geometry);
+      if (obj) {
+        const feature = (obj as OsmObject).toFeature();
+        if (feature?.geometry) {
+          geometries.push(feature.geometry);
+        }
+      } else {
+        tainted = true;
       }
     }
 
@@ -286,6 +288,10 @@ export class Relation extends OsmObject {
         type: "Point",
         coordinates: strArrayToFloat([this.center.lon, this.center.lat]),
       });
+    }
+
+    if (tainted) {
+      feature.properties["@tainted"] = tainted;
     }
 
     if (geometries.length === 1) {
