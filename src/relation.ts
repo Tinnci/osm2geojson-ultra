@@ -210,7 +210,8 @@ export class Relation extends OsmObject {
       const innerWayCollection = new WayCollection();
       for (const { type, ref, role } of this.members) {
         if (type === "way" && ["inner", "outer"].includes(role)) {
-          const way = this.ways.find((way) => way.getCompositeId() === `way/${ref}`);
+          const wid = `way/${ref}`;
+          const way = this.ways.find((way) => (way as Way).getCompositeId() === wid);
           if (way) {
             if (role === "outer") {
               outerWayCollection.addWay(way as Way);
@@ -235,7 +236,7 @@ export class Relation extends OsmObject {
       const wayCollection = new WayCollection();
       for (const { type, ref, role } of this.members) {
         if (type === "way") {
-          const way = this.ways.find((way) => way.getCompositeId() === `way/${ref}`);
+          const way = this.ways.find((way) => (way as Way).getCompositeId() === `way/${ref}`);
           if (way) {
             wayCollection.addWay(way as Way);
           } else {
@@ -249,8 +250,10 @@ export class Relation extends OsmObject {
       }
     } else {
       for (let way of this.ways) {
-        const feature = way.toFeature();
-        geometries.push(feature.geometry);
+        const feature = (way as Way).toFeature();
+        if (feature?.geometry) {
+          geometries.push(feature.geometry);
+        }
       }
     }
 
