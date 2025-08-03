@@ -25,6 +25,8 @@ This project was forked from [osm2geojson-lite](https://github.com/tibetty/osm2g
 * Only distributed as an ES Module
 * All options replaced by an `elementId` option
 * Improved polygon detection for closed ways
+* Revamped relation processing
+* Detection and reporting of tainted objects (eg: missing way nodes or relation members)
 
 Usage
 -----
