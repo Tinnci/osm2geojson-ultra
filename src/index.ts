@@ -72,17 +72,16 @@ function osm2geojson(
       featureArray.push(feature);
     }
   } else {
-
-  for (const v of refElements.values()) {
-    if (v.refCount > 0 && !v.hasTag) {
-      continue;
-    }
-    const feature = v.toFeature();
-    if (feature) {
-      featureArray.push(feature);
+    for (const v of refElements.values()) {
+      if (v.refCount > 0 && !v.hasTag) {
+        continue;
+      }
+      const feature = v.toFeature();
+      if (feature) {
+        featureArray.push(feature);
+      }
     }
   }
-}
 
   return { type: "FeatureCollection", features: featureArray };
 }

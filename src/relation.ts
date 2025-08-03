@@ -23,7 +23,7 @@ export class Relation extends OsmObject {
   private bounds: number[] | undefined = undefined;
   private center: null | LatLon = null;
   public ways: (LateBinder<Way> | Way)[] = [];
-  private members: Array<{ [k: string]: any}> = [];
+  private members: Array<{ [k: string]: any }> = [];
 
   constructor(id: string, refElems: RefElements) {
     super("relation", id, refElems);
@@ -202,14 +202,16 @@ export class Relation extends OsmObject {
       delete feature.bbox;
     }
 
-    if (this.members.some(({role}) => role === "outer")) {
+    if (this.members.some(({ role }) => role === "outer")) {
       const outerWayCollection = new WayCollection();
       const innerWayCollection = new WayCollection();
       for (const { type, ref, role } of this.members) {
         if (type === "way" && ["inner", "outer"].includes(role)) {
           const wid = `way/${ref}`;
           membersAccountedFor.push(wid);
-          const way = this.ways.find((way) => (way as Way).getCompositeId() === wid);
+          const way = this.ways.find(
+            (way) => (way as Way).getCompositeId() === wid,
+          );
           if (way) {
             if (role === "outer") {
               outerWayCollection.addWay(way as Way);
@@ -217,7 +219,7 @@ export class Relation extends OsmObject {
               innerWayCollection.addWay(way as Way);
             }
           } else {
-            tainted = true
+            tainted = true;
           }
         }
       }
@@ -236,7 +238,9 @@ export class Relation extends OsmObject {
         if (type === "way") {
           const wid = `way/${ref}`;
           membersAccountedFor.push(wid);
-          const way = this.ways.find((way) => (way as Way).getCompositeId() === wid);
+          const way = this.ways.find(
+            (way) => (way as Way).getCompositeId() === wid,
+          );
           if (way) {
             wayCollection.addWay(way as Way);
           } else {
@@ -269,7 +273,8 @@ export class Relation extends OsmObject {
     }
 
     for (let rel of this.relations) {
-      if (membersAccountedFor.includes((rel as Relation).getCompositeId())) continue;
+      if (membersAccountedFor.includes((rel as Relation).getCompositeId()))
+        continue;
       const feature = (rel as Relation).toFeature();
       if (feature?.geometry) {
         geometries.push(feature.geometry);
