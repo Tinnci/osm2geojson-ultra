@@ -63,23 +63,18 @@ function osm2geojson(
 
   refElements.bindAll();
 
-  let featureArray: Feature<any, any>[] = [];
-
   if (elementId) {
-    //return refElements.get(elementId)?.toFeature();
-    const feature = refElements.get(elementId)?.toFeature();
+    return refElements.get(elementId)?.toFeature();
+  }
+
+  let featureArray: Feature<any, any>[] = [];
+  for (const v of refElements.values()) {
+    if (v.refCount > 0 && !v.hasTag) {
+      continue;
+    }
+    const feature = v.toFeature();
     if (feature) {
       featureArray.push(feature);
-    }
-  } else {
-    for (const v of refElements.values()) {
-      if (v.refCount > 0 && !v.hasTag) {
-        continue;
-      }
-      const feature = v.toFeature();
-      if (feature) {
-        featureArray.push(feature);
-      }
     }
   }
 
