@@ -188,10 +188,7 @@ export class Relation extends OsmObject {
       [];
     let pointFeatures: Array<Feature<Point | MultiPoint, any>> = [];
     let tainted = false;
-
-    for (const relation of this.relations) {
-      // TODO
-    }
+    const membersAccountedFor: Array<string> = [];
 
     const feature: Feature<any, any> = {
       type: "Feature",
@@ -211,6 +208,7 @@ export class Relation extends OsmObject {
       for (const { type, ref, role } of this.members) {
         if (type === "way" && ["inner", "outer"].includes(role)) {
           const wid = `way/${ref}`;
+          membersAccountedFor.push(wid);
           const way = this.ways.find((way) => (way as Way).getCompositeId() === wid);
           if (way) {
             if (role === "outer") {
@@ -236,7 +234,9 @@ export class Relation extends OsmObject {
       const wayCollection = new WayCollection();
       for (const { type, ref, role } of this.members) {
         if (type === "way") {
-          const way = this.ways.find((way) => (way as Way).getCompositeId() === `way/${ref}`);
+          const wid = `way/${ref}`;
+          membersAccountedFor.push(wid);
+          const way = this.ways.find((way) => (way as Way).getCompositeId() === wid);
           if (way) {
             wayCollection.addWay(way as Way);
           } else {
@@ -248,13 +248,6 @@ export class Relation extends OsmObject {
       if (geometry) {
         geometries.push(geometry);
       }
-    } else {
-      for (let way of this.ways) {
-        const feature = (way as Way).toFeature();
-        if (feature?.geometry) {
-          geometries.push(feature.geometry);
-        }
-      }
     }
 
     for (let node of this.nodes) {
@@ -264,6 +257,22 @@ export class Relation extends OsmObject {
           type: "Point",
           coordinates: strArrayToFloat([latLng.lon, latLng.lat]),
         });
+      }
+    }
+
+    for (let way of this.ways) {
+      if (membersAccountedFor.includes((way as Way).getCompositeId())) continue;
+      const feature = (way as Way).toFeature();
+      if (feature?.geometry) {
+        geometries.push(feature.geometry);
+      }
+    }
+
+    for (let rel of this.relations) {
+      if (membersAccountedFor.includes((rel as Relation).getCompositeId())) continue;
+      const feature = (rel as Relation).toFeature();
+      if (feature?.geometry) {
+        geometries.push(feature.geometry);
       }
     }
 
