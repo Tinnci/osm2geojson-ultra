@@ -92,8 +92,9 @@ export class Relation extends OsmObject {
       case "node":
         let node: Node | null = null;
         if (member.lat && member.lon) {
-          node = new Node(member.ref, this.refElems);
+          node = new Node(member.ref, undefined as unknown as RefElements);
           node.setLatLng({ lon: member.lon, lat: member.lat });
+          // vvv Is this stuff necessary? vvv
           if (member.tags) {
             node.addTags(member.tags);
           }
