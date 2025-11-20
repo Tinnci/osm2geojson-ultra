@@ -1,0 +1,92 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.8 e802775f",
+  "osm3s": {
+    "timestamp_osm_base": "2025-11-20T01:36:02Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "way",
+  "id": 107738182,
+  "bounds": {
+    "minlat": 52.6456131,
+    "minlon": 4.8018510,
+    "maxlat": 52.6464251,
+    "maxlon": 4.8032686
+  },
+  "nodes": [
+    1237681639,
+    1237666174,
+    1237675397,
+    1237699254,
+    1237671938,
+    1237695992,
+    1237681639
+  ],
+  "geometry": [
+    { "lat": 52.6460747, "lon": 4.8032686 },
+    { "lat": 52.6456131, "lon": 4.8023923 },
+    { "lat": 52.6459641, "lon": 4.8018510 },
+    { "lat": 52.6464176, "lon": 4.8026881 },
+    { "lat": 52.6464251, "lon": 4.8027366 },
+    { "lat": 52.6464141, "lon": 4.8027852 },
+    { "lat": 52.6460747, "lon": 4.8032686 }
+  ],
+  "tags": {
+    "landuse": "orchard",
+    "source": "3dShapes"
+  }
+},
+{
+  "type": "relation",
+  "id": 1532632,
+  "bounds": {
+    "minlat": 52.6455048,
+    "minlon": 4.8016968,
+    "maxlat": 52.6465534,
+    "maxlon": 4.8034870
+  },
+  "members": [
+    {
+      "type": "way",
+      "ref": 107738897,
+      "role": "outer",
+      "geometry": [
+         { "lat": 52.6460465, "lon": 4.8034870 },
+         { "lat": 52.6460300, "lon": 4.8034327 },
+         { "lat": 52.6460025, "lon": 4.8033163 },
+         { "lat": 52.6455048, "lon": 4.8024022 },
+         { "lat": 52.6459717, "lon": 4.8017198 },
+         { "lat": 52.6459889, "lon": 4.8016968 },
+         { "lat": 52.6465534, "lon": 4.8027353 },
+         { "lat": 52.6460465, "lon": 4.8034870 }
+      ]
+    },
+    {
+      "type": "way",
+      "ref": 107738182,
+      "role": "inner",
+      "geometry": [
+         { "lat": 52.6460747, "lon": 4.8032686 },
+         { "lat": 52.6456131, "lon": 4.8023923 },
+         { "lat": 52.6459641, "lon": 4.8018510 },
+         { "lat": 52.6464176, "lon": 4.8026881 },
+         { "lat": 52.6464251, "lon": 4.8027366 },
+         { "lat": 52.6464141, "lon": 4.8027852 },
+         { "lat": 52.6460747, "lon": 4.8032686 }
+      ]
+    }
+  ],
+  "tags": {
+    "landuse": "forest",
+    "source": "3dShapes",
+    "type": "multipolygon"
+  }
+}
+
+  ],
+  "noElementId": true
+}
+

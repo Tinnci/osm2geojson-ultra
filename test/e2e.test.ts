@@ -30,7 +30,7 @@ describe('osm2geojson', () => {
             let osm = JSON.parse(fs.readFileSync(`./test/data/${jsonFile}`, 'utf-8'));
             let elementId;
             const relations = osm.elements.filter(({type}) => type === "relation");
-            if (relations.length === 1) {
+            if (relations.length === 1 && !osm.noElementId) {
               elementId = `relation/${relations[0].id}`;
             }
             let geojson = osm2geojson(osm, { elementId });
