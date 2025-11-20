@@ -60,7 +60,7 @@ export class Relation extends OsmObject {
 
       case "way":
         if (member.geometry) {
-          const way = new Way(member.ref, this.refElems);
+          const way = new Way(member.ref, undefined as unknown as RefElements);
           way.setLatLngArray(member.geometry);
           way.refCount++;
           this.ways.push(way);
