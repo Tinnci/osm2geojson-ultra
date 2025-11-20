@@ -60,7 +60,7 @@ export class Relation extends OsmObject {
 
       case "way":
         if (member.geometry) {
-          const way = new Way(member.ref, this.refElems);
+          const way = new Way(member.ref, undefined as unknown as RefElements);
           way.setLatLngArray(member.geometry);
           way.refCount++;
           this.ways.push(way);
@@ -92,8 +92,9 @@ export class Relation extends OsmObject {
       case "node":
         let node: Node | null = null;
         if (member.lat && member.lon) {
-          node = new Node(member.ref, this.refElems);
+          node = new Node(member.ref, undefined as unknown as RefElements);
           node.setLatLng({ lon: member.lon, lat: member.lat });
+          // vvv Is this stuff necessary? vvv
           if (member.tags) {
             node.addTags(member.tags);
           }
