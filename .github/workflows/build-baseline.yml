@@ -1,0 +1,71 @@
+name: Build Baseline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test
+
+  release:
+    if: github.event_name == 'workflow_dispatch'
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Pack and set env
+        run: |
+          npm pack
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "TARBALL=osm2geojson-ultra-${VERSION}.tgz" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}-baseline
+          name: "Baseline v${{ env.VERSION }}"
+          files: ${{ env.TARBALL }}
+          prerelease: false
+          body: |
+            Pre-built baseline of **osm2geojson-ultra v${{ env.VERSION }}**.
+
+            Maintained by [Tinnci/Hospital-TempBox-Management](https://github.com/Tinnci/Hospital-TempBox-Management).
+
+            To install from this fork release, add to `package.json`:
+            ```json
+            "osm2geojson-ultra": "https://github.com/Tinnci/osm2geojson-ultra/releases/download/v${{ env.VERSION }}-baseline/osm2geojson-ultra-${{ env.VERSION }}.tgz"
+            ```
